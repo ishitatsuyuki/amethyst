@@ -32,9 +32,9 @@ pub enum Light {
 #[derive(Clone, Debug, PartialEq, serde::Deserialize, serde::Serialize)]
 #[serde(default)]
 pub struct DirectionalLight {
-    /// Color of the light in SRGB format.
-    #[serde(with = "crate::serde_shim::srgb")]
-    pub color: palette::Srgb,
+    /// Color of the light in linear space.
+    #[serde(with = "crate::serde_shim::linsrgb")]
+    pub color: palette::LinSrgb,
     /// Brightness of the light source, different unit from Spot and PointLight.
     pub intensity: f32,
     /// Direction that the light is pointing.
@@ -81,9 +81,9 @@ impl From<DirectionalLight> for Light {
 #[derive(Clone, Debug, PartialEq, serde::Deserialize, serde::Serialize)]
 #[serde(default)]
 pub struct PointLight {
-    /// Color of the light in SRGB format.
-    #[serde(with = "crate::serde_shim::srgb")]
-    pub color: palette::Srgb,
+    /// Color of the light in linear space.
+    #[serde(with = "crate::serde_shim::linsrgb")]
+    pub color: palette::LinSrgb,
     /// Brightness of the light source, in lumens.
     pub intensity: f32,
     /// Maximum radius of the point light's affected area.
@@ -117,9 +117,9 @@ impl From<PointLight> for Light {
 pub struct SpotLight {
     /// Opening angle of the light cone in radians.
     pub angle: f32,
-    /// Color of the light in SRGB format.
-    #[serde(with = "crate::serde_shim::srgb")]
-    pub color: palette::Srgb,
+    /// Color of the light in linear space.
+    #[serde(with = "crate::serde_shim::linsrgb")]
+    pub color: palette::LinSrgb,
     /// Direction that the light is pointing.
     pub direction: Vector3<f32>,
     /// Brightness of the light source, in lumens.
@@ -157,9 +157,9 @@ impl From<SpotLight> for Light {
 pub struct SunLight {
     /// The sun's angular radius in radians.
     pub angle: f32,
-    /// Color of the light in SRGB format.
-    #[serde(with = "crate::serde_shim::srgb")]
-    pub color: palette::Srgb,
+    /// Color of the light in linear space.
+    #[serde(with = "crate::serde_shim::linsrgb")]
+    pub color: palette::LinSrgb,
     /// Direction that the light is pointing.
     pub direction: Vector3<f32>,
     /// Brightness of the sun light, in lux.
