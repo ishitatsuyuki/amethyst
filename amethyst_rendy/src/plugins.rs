@@ -9,7 +9,7 @@ use crate::{
 };
 use amethyst_core::ecs::{DispatcherBuilder, World};
 use amethyst_error::Error;
-use palette::Srgb;
+use palette::LinSrgb;
 use rendy::graph::render::RenderGroupDesc;
 
 #[cfg(feature = "window")]
@@ -285,12 +285,12 @@ impl<B: Backend> RenderPlugin<B> for RenderDebugLines {
 #[derive(Default, Debug)]
 pub struct RenderSkybox {
     target: Target,
-    colors: Option<(Srgb, Srgb)>,
+    colors: Option<(LinSrgb, LinSrgb)>,
 }
 
 impl RenderSkybox {
     /// Create skybox with specified nadir and zenith colors.
-    pub fn with_colors(nadir_color: Srgb, zenith_color: Srgb) -> Self {
+    pub fn with_colors(nadir_color: LinSrgb, zenith_color: LinSrgb) -> Self {
         Self {
             target: Default::default(),
             colors: Some((nadir_color, zenith_color)),

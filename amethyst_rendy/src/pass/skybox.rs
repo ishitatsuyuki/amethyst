@@ -1,5 +1,5 @@
 use crate::{
-    palette::Srgb,
+    palette::LinSrgb,
     pipeline::{PipelineDescBuilder, PipelinesBuilder},
     pod::IntoPod,
     shape::Shape,
@@ -27,15 +27,15 @@ use thread_profiler::profile_scope;
 
 #[derive(Clone, Debug, PartialEq)]
 struct SkyboxSettings {
-    nadir_color: Srgb,
-    zenith_color: Srgb,
+    nadir_color: LinSrgb,
+    zenith_color: LinSrgb,
 }
 
 impl Default for SkyboxSettings {
     fn default() -> Self {
         Self {
-            nadir_color: Srgb::new(0.1, 0.3, 0.35),
-            zenith_color: Srgb::new(0.75, 1.0, 1.0),
+            nadir_color: LinSrgb::new(0.1, 0.3, 0.35),
+            zenith_color: LinSrgb::new(0.75, 1.0, 1.0),
         }
     }
 }
@@ -70,7 +70,7 @@ impl DrawSkyboxDesc {
     }
 
     /// Defines the [SkyboxSettings] colors to initialize for this render group
-    pub fn with_colors(nadir_color: Srgb, zenith_color: Srgb) -> Self {
+    pub fn with_colors(nadir_color: LinSrgb, zenith_color: LinSrgb) -> Self {
         Self {
             default_settings: SkyboxSettings {
                 nadir_color,
