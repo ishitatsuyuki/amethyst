@@ -417,3 +417,31 @@ impl IntoPod<[f32; 4]> for palette::Srgba {
         [r, g, b, a]
     }
 }
+
+impl IntoPod<vec3> for palette::LinSrgb {
+    fn into_pod(self) -> vec3 {
+        let (r, g, b) = self.into_components();
+        [r, g, b].into()
+    }
+}
+
+impl IntoPod<[f32; 3]> for palette::LinSrgb {
+    fn into_pod(self) -> [f32; 3] {
+        let (r, g, b) = self.into_components();
+        [r, g, b]
+    }
+}
+
+impl IntoPod<vec4> for palette::LinSrgba {
+    fn into_pod(self) -> vec4 {
+        let (r, g, b, a) = self.into_components();
+        [r, g, b, a].into()
+    }
+}
+
+impl IntoPod<[f32; 4]> for palette::LinSrgba {
+    fn into_pod(self) -> [f32; 4] {
+        let (r, g, b, a) = self.into_components();
+        [r, g, b, a]
+    }
+}

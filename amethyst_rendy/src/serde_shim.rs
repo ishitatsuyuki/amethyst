@@ -59,6 +59,61 @@ pub mod srgba {
     }
 }
 
+/// LinSrgb serialization shim.
+/// ```
+/// # use serde::{Serialize, Deserialize};
+/// #[derive(Serialize, Deserialize)]
+/// struct MyType(
+///     #[serde(with="amethyst_rendy::serde_shim::srgb")]
+///     pub palette::Srgb
+/// );
+/// ```
+pub mod linsrgb {
+    use super::*;
+    #[derive(Serialize, Deserialize)]
+    struct LinSrgb(f32, f32, f32);
+
+    /// Serialize Srgba type as tuple struct with three floats
+    pub fn serialize<S: Serializer>(x: &palette::LinSrgb, s: S) -> Result<S::Ok, S::Error> {
+        let (r, g, b) = x.into_components();
+        LinSrgb(r, g, b).serialize(s)
+    }
+
+    /// Deserialize Srgba type as tuple struct with three floats
+    pub fn deserialize<'de, D: Deserializer<'de>>(de: D) -> Result<palette::LinSrgb, D::Error> {
+        let t = LinSrgb::deserialize(de)?;
+        Ok(palette::LinSrgb::new(t.0, t.1, t.2))
+    }
+}
+
+/// LinSrgba serialization shim.
+/// ```
+/// # use serde::{Serialize, Deserialize};
+/// #[derive(Serialize, Deserialize)]
+/// struct MyType(
+///     #[serde(with="amethyst_rendy::serde_shim::srgba")]
+///     pub palette::Srgba
+/// );
+/// ```
+pub mod linsrgba {
+    use super::*;
+    #[derive(Serialize, Deserialize)]
+    struct LinSrgba(f32, f32, f32, f32);
+
+    /// Serialize Srgba type as tuple struct with four floats
+    pub fn serialize<S: Serializer>(x: &palette::LinSrgba, s: S) -> Result<S::Ok, S::Error> {
+        let (r, g, b, a) = x.into_components();
+        LinSrgba(r, g, b, a).serialize(s)
+    }
+
+    /// Deserialize Srgba type as tuple struct with four floats
+    pub fn deserialize<'de, D: Deserializer<'de>>(de: D) -> Result<palette::LinSrgba, D::Error> {
+        let t = LinSrgba::deserialize(de)?;
+        Ok(palette::LinSrgba::new(t.0, t.1, t.2, t.3))
+    }
+}
+
+
 #[cfg(test)]
 mod test {
     use serde::{Deserialize, Serialize};
