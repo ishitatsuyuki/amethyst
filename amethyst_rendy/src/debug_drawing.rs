@@ -4,7 +4,7 @@ use amethyst_core::{
     ecs::{Component, DenseVecStorage},
     math::{Point2, Point3, UnitQuaternion, Vector2, Vector3},
 };
-use palette::Srgba;
+use palette::LinSrgba;
 use rendy::mesh::{AsVertex, Color, PosColor, VertexFormat};
 
 /// Debug lines are stored as a pair of position and color.
@@ -66,12 +66,12 @@ impl DebugLinesComponent {
     }
 
     /// Adds a line to be rendered by giving a position and a direction.
-    pub fn add_direction(&mut self, position: Point3<f32>, direction: Vector3<f32>, color: Srgba) {
+    pub fn add_direction(&mut self, position: Point3<f32>, direction: Vector3<f32>, color: LinSrgba) {
         self.add_line(position, position + direction, color);
     }
 
     /// Adds a line to be rendered by giving a start and an end position.
-    pub fn add_line(&mut self, start: Point3<f32>, end: Point3<f32>, color: Srgba) {
+    pub fn add_line(&mut self, start: Point3<f32>, end: Point3<f32>, color: LinSrgba) {
         self.add_gradient_line(start, end, color, color);
     }
 
@@ -80,8 +80,8 @@ impl DebugLinesComponent {
         &mut self,
         start: Point3<f32>,
         end: Point3<f32>,
-        start_color: Srgba,
-        end_color: Srgba,
+        start_color: LinSrgba,
+        end_color: LinSrgba,
     ) {
         let vertex = DebugLine::new(
             PosColor {
@@ -99,7 +99,7 @@ impl DebugLinesComponent {
     /// Adds multiple lines that form a rectangle to be rendered by giving a Z coordinate, a min and a max position.
     ///
     /// This rectangle is aligned to the XY plane.
-    pub fn add_rectangle_2d(&mut self, min: Point2<f32>, max: Point2<f32>, z: f32, color: Srgba) {
+    pub fn add_rectangle_2d(&mut self, min: Point2<f32>, max: Point2<f32>, z: f32, color: LinSrgba) {
         self.add_line(
             [min[0], min[1], z].into(),
             [max[0], min[1], z].into(),
@@ -129,7 +129,7 @@ impl DebugLinesComponent {
         max: Point2<f32>,
         z: f32,
         rotation: UnitQuaternion<f32>,
-        color: Srgba,
+        color: LinSrgba,
     ) {
         let center = (min + Vector2::new(max[0], max[1])) / 2.0;
         let center = Vector3::new(center[0], center[1], z);
@@ -153,7 +153,7 @@ impl DebugLinesComponent {
     /// Adds multiple lines that form a box to be rendered by giving a min and a max position.
     ///
     /// This box is an axis aligned box.
-    pub fn add_box(&mut self, min: Point3<f32>, max: Point3<f32>, color: Srgba) {
+    pub fn add_box(&mut self, min: Point3<f32>, max: Point3<f32>, color: LinSrgba) {
         self.add_rectangle_2d(min.xy(), max.xy(), min[2], color);
         self.add_rectangle_2d(min.xy(), max.xy(), max[2], color);
         self.add_line(min, [min[0], min[1], max[2]].into(), color);
@@ -176,7 +176,7 @@ impl DebugLinesComponent {
         min: Point3<f32>,
         max: Point3<f32>,
         rotation: UnitQuaternion<f32>,
-        color: Srgba,
+        color: LinSrgba,
     ) {
         let center = (min + Vector3::from([max[0], max[1], max[2]])) / 2.0;
         let center = Vector3::new(center[0], center[1], center[2]);
@@ -218,7 +218,7 @@ impl DebugLinesComponent {
     /// Adds multiple lines that form a circle to be rendered by giving a center, a radius and an amount of points.
     ///
     /// This circle is aligned to the XY plane.
-    pub fn add_circle_2d(&mut self, center: Point3<f32>, radius: f32, points: u32, color: Srgba) {
+    pub fn add_circle_2d(&mut self, center: Point3<f32>, radius: f32, points: u32, color: LinSrgba) {
         let mut prev = None;
 
         for i in 0..=points {
@@ -242,7 +242,7 @@ impl DebugLinesComponent {
         radius: f32,
         points: u32,
         rotation: UnitQuaternion<f32>,
-        color: Srgba,
+        color: LinSrgba,
     ) {
         let mut prev = None;
 
@@ -268,7 +268,7 @@ impl DebugLinesComponent {
         radius: f32,
         horizontal_points: u32,
         vertical_points: u32,
-        color: Srgba,
+        color: LinSrgba,
     ) {
         let mut prev_row = Vec::new();
 
@@ -307,7 +307,7 @@ impl DebugLinesComponent {
         radius: f32,
         height: f32,
         points: u32,
-        color: Srgba,
+        color: LinSrgba,
     ) {
         let mut prev: Option<(Point3<f32>, Point3<f32>)> = None;
 
@@ -338,7 +338,7 @@ impl DebugLinesComponent {
         height: f32,
         points: u32,
         rotation: UnitQuaternion<f32>,
-        color: Srgba,
+        color: LinSrgba,
     ) {
         let mut prev: Option<(Point3<f32>, Point3<f32>)> = None;
         let center = Vector3::new(center[0], center[1], center[2]);
@@ -393,7 +393,7 @@ impl DebugLines {
     }
 
     /// Submits a line to be rendered by giving a position and a direction.
-    pub fn draw_direction(&mut self, position: Point3<f32>, direction: Vector3<f32>, color: Srgba) {
+    pub fn draw_direction(&mut self, position: Point3<f32>, direction: Vector3<f32>, color: LinSrgba) {
         self.inner.add_direction(position, direction, color);
     }
 
@@ -402,22 +402,22 @@ impl DebugLines {
         &mut self,
         start: Point3<f32>,
         end: Point3<f32>,
-        start_color: Srgba,
-        end_color: Srgba,
+        start_color: LinSrgba,
+        end_color: LinSrgba,
     ) {
         self.inner
             .add_gradient_line(start, end, start_color, end_color);
     }
 
     /// Submits a line to be rendered by giving a start and an end position.
-    pub fn draw_line(&mut self, start: Point3<f32>, end: Point3<f32>, color: Srgba) {
+    pub fn draw_line(&mut self, start: Point3<f32>, end: Point3<f32>, color: LinSrgba) {
         self.inner.add_line(start, end, color);
     }
 
     /// Submits multiple lines that form a rectangle to be rendered by giving a Z coordinate, a min and a max position.
     ///
     /// This rectangle is aligned to the XY plane.
-    pub fn draw_rectangle(&mut self, min: Point2<f32>, max: Point2<f32>, z: f32, color: Srgba) {
+    pub fn draw_rectangle(&mut self, min: Point2<f32>, max: Point2<f32>, z: f32, color: LinSrgba) {
         self.inner.add_rectangle_2d(min, max, z, color);
     }
 
@@ -428,7 +428,7 @@ impl DebugLines {
         max: Point2<f32>,
         z: f32,
         rotation: UnitQuaternion<f32>,
-        color: Srgba,
+        color: LinSrgba,
     ) {
         self.inner
             .add_rotated_rectangle(min, max, z, rotation, color);
@@ -437,7 +437,7 @@ impl DebugLines {
     /// Submits multiple lines that form a box to be rendered by giving a min and a max position.
     ///
     /// This box is an axis aligned box.
-    pub fn draw_box(&mut self, min: Point3<f32>, max: Point3<f32>, color: Srgba) {
+    pub fn draw_box(&mut self, min: Point3<f32>, max: Point3<f32>, color: LinSrgba) {
         self.inner.add_box(min, max, color);
     }
 
@@ -449,7 +449,7 @@ impl DebugLines {
         min: Point3<f32>,
         max: Point3<f32>,
         rotation: UnitQuaternion<f32>,
-        color: Srgba,
+        color: LinSrgba,
     ) {
         self.inner.add_rotated_box(min, max, rotation, color);
     }
@@ -457,7 +457,7 @@ impl DebugLines {
     /// Submits multiple lines that form a circle to be rendered by giving a center, a radius and an amount of points.
     ///
     /// This circle is aligned to the XY plane.
-    pub fn draw_circle(&mut self, center: Point3<f32>, radius: f32, points: u32, color: Srgba) {
+    pub fn draw_circle(&mut self, center: Point3<f32>, radius: f32, points: u32, color: LinSrgba) {
         self.inner.add_circle_2d(center, radius, points, color);
     }
 
@@ -468,7 +468,7 @@ impl DebugLines {
         radius: f32,
         points: u32,
         rotation: UnitQuaternion<f32>,
-        color: Srgba,
+        color: LinSrgba,
     ) {
         self.inner
             .add_rotated_circle(center, radius, points, rotation, color);
@@ -481,7 +481,7 @@ impl DebugLines {
         radius: f32,
         horizontal_points: u32,
         vertical_points: u32,
-        color: Srgba,
+        color: LinSrgba,
     ) {
         self.inner
             .add_sphere(center, radius, horizontal_points, vertical_points, color);
@@ -496,7 +496,7 @@ impl DebugLines {
         radius: f32,
         height: f32,
         points: u32,
-        color: Srgba,
+        color: LinSrgba,
     ) {
         self.inner
             .add_cylinder(center, radius, height, points, color);
@@ -510,7 +510,7 @@ impl DebugLines {
         height: f32,
         points: u32,
         rotation: UnitQuaternion<f32>,
-        color: Srgba,
+        color: LinSrgba,
     ) {
         self.inner
             .add_rotated_cylinder(center, radius, height, points, rotation, color);
